@@ -19,7 +19,6 @@ def index(request):
 
 
 @login_required
-
 def profile(request):
     profile = Profile.objects.filter(user=request.user) 
     if not profile.exists():
@@ -38,7 +37,7 @@ def profile(request):
     context = {'form': form}
     return render(request, 'FeedApp/profile.html', context)
 
-
+@login_required
 def myfeed(request):
     comment_count_list = []
     like_count_list = []
@@ -54,3 +53,17 @@ def myfeed(request):
     context = {'posts':posts, 'zipped_list':zipped_list}
     return render(request, 'FeedApp/myfeed.html', context)
 
+@login_required
+def new_post(request):
+    if request.method != 'POST':
+        form = PostForm()
+    else:
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            new_post = form.save(commit=False)
+            new_post.username = request.user
+            new_post.save()
+            return redirect('FeedApp:myfeed')
+
+    context = {'form:form'}
+    return render(request, 'FeedApp/new_post.html', context)
