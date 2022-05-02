@@ -65,5 +65,20 @@ def new_post(request):
             new_post.save()
             return redirect('FeedApp:myfeed')
 
-    context = {'form:form'}
+    context = {'form':form}
     return render(request, 'FeedApp/new_post.html', context)
+
+@login_required
+def comments(request, post_id):
+    if request.method == 'POST' and request.POST.get('btn1'):
+        comment = request.POST.get("comment")
+        Comment.objects.create(post_id=post_id, username=request.user, text=comment, date_added=date.today())
+
+    comments = Comment.objects.filter(post=post_id)
+    post = Post.objects.get(id=post_id)
+
+    context = {'post':post, 'comments':comments}
+    return render(request, 'FeedApp/comments.html', context)
+
+
+
