@@ -141,6 +141,7 @@ def friends(request):
             user_profile.friends.add(relationship_obj.sender.user)
 
             relationship_obj.sender.friends.add(request.user)
-    context = {'user_friends_profiles':user_friends_profiles,'user_relationships':user_relationships,'all_profiles':all_profiles,'request_received_profiles':request_received_profiles}
-
+    
+    context = {'user_friends_profiles':user_friends_profiles,'user_relationships':user_relationships,
+                    'all_profiles':all_profiles,'request_received_profiles':request_received_profiles}
     return render(request, 'FeedApp/friends.html', context)
